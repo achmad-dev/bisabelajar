@@ -1,0 +1,9 @@
+go 1.21.6
+
+use (
+	./api-gateway
+	./domain
+	./internal
+	./series
+	./shorts
+)

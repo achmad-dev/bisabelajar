@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  shortsdb:
+    image: postgres:13
+    container_name: shortsdb
+    environment:
+      POSTGRES_USER: shorts
+      POSTGRES_PASSWORD: shorts
+    restart: unless-stopped
+    volumes:
+      - "./migrations/Shorts.sql:/docker-entrypoint-initdb.d/init.sql"
+    ports:
+      - "5432:5432"
+  
+  seriesdb:
+    image: postgres:13
+    container_name: shortsdb
+    environment:
+      POSTGRES_USER: series
+      POSTGRES_PASSWORD: series
+    restart: unless-stopped
+    volumes:
+      - "./migrations/Series.sql:/docker-entrypoint-initdb.d/init.sql"
+    ports:
+      - "5433:5433"
+  
+
+  readonlydb:
+    image: postgres:13
+    container_name: shortsdb
+    environment:
+      POSTGRES_USER: readonly
+      POSTGRES_PASSWORD: readonly
+    restart: unless-stopped
+    volumes:
+      - "./migrations/Readonly.sql:/docker-entrypoint-initdb.d/init.sql"
+    ports:
+      - "5434:5434"
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    restart: unless-stopped
+    ports:
+      - 5672:5672
+      - 15672:15672
+
+  redis:
+    image: redis:6.2
+    container_name: redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
