@@ -6,17 +6,16 @@ import (
 	"time"
 
 	"github.com/cenkalti/backoff/v4"
+	amqp "github.com/rabbitmq/amqp091-go"
 	log "github.com/sirupsen/logrus"
-	"github.com/streadway/amqp"
 )
 
 type RabbitMQConfig struct {
-	Host         string
-	Port         int
-	User         string
-	Password     string
-	ExchangeName string
-	Kind         string
+	Host     string
+	Port     int
+	User     string
+	Password string
+	Kind     string
 }
 
 // Initialize new channel for rabbitmq
