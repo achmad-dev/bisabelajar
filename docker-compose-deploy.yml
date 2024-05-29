@@ -5,8 +5,8 @@ services:
     image: postgres:13
     container_name: bisabelajardb
     environment:
-      POSTGRES_USER: readonly
-      POSTGRES_PASSWORD: readonly
+      POSTGRES_USER: bisabelajar
+      POSTGRES_PASSWORD: bisabelajar
     restart: unless-stopped
     volumes:
       - "./migrations/bisabelajar.sql:/docker-entrypoint-initdb.d/init.sql"

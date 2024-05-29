@@ -15,7 +15,6 @@ type RabbitMQConfig struct {
 	Port     int
 	User     string
 	Password string
-	Kind     string
 }
 
 // Initialize new channel for rabbitmq

@@ -1,9 +1,8 @@
 go 1.21.6
 
 use (
-	./api-gateway
+	./bisabelajar
 	./domain
 	./internal
-	./series
 	./shorts
 )
