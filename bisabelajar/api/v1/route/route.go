@@ -14,10 +14,11 @@ import (
 
 type Route struct {
 	seriesHandle handler.SeriesHandler
+	port         string
 }
 
-func NewV1Route(seriesHandler handler.SeriesHandler) Route {
-	return Route{seriesHandle: seriesHandler}
+func NewV1Route(seriesHandler handler.SeriesHandler, port string) Route {
+	return Route{seriesHandle: seriesHandler, port: port}
 }
 
 func (b *Route) Intialize() {
@@ -45,6 +46,6 @@ func (b *Route) Intialize() {
 	router.Route("/v1", func(r chi.Router) {
 		r.Mount("/series", b.seriesHandle.Routes())
 	})
-
-	log.Fatal(http.ListenAndServe(":8081", router))
+	log.Printf("runnning on port %s", b.port)
+	log.Fatal(http.ListenAndServe(b.port, router))
 }

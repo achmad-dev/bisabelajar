@@ -14,8 +14,8 @@ type SeriesHandler struct {
 	seriesService service.SeriesService
 }
 
-func NewSeriesHandler(seriesService service.SeriesService) *SeriesHandler {
-	return &SeriesHandler{seriesService: seriesService}
+func NewSeriesHandler(seriesService service.SeriesService) SeriesHandler {
+	return SeriesHandler{seriesService: seriesService}
 }
 
 func (b *SeriesHandler) Routes() *chi.Mux {

@@ -2,15 +2,17 @@ package db
 
 import (
 	"context"
+	_ "database/sql"
 	"log"
 
 	"github.com/jmoiron/sqlx"
+	_ "github.com/lib/pq"
 )
 
 func NewPostgresConnection(ctx context.Context, dburl string) *sqlx.DB {
-	db, err := sqlx.ConnectContext(ctx, "pgx", dburl)
+	db, err := sqlx.ConnectContext(ctx, "postgres", dburl)
 	if err != nil {
-		log.Fatalln("error connect to db")
+		log.Fatalln(err.Error())
 	}
 	return db
 }

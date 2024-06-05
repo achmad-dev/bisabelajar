@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3'
 
 services:
   bisabelajardb:
@@ -12,14 +12,18 @@ services:
       - "./migrations/bisabelajar.sql:/docker-entrypoint-initdb.d/init.sql"
     ports:
       - "5432:5432"
+    networks:
+      - backend
 
   rabbitmq:
     image: rabbitmq:3-management
     container_name: rabbitmq
     restart: unless-stopped
     ports:
-      - 5672:5672
-      - 15672:15672
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - backend
 
   redis:
     image: redis:6.2
@@ -30,8 +34,8 @@ services:
     environment:
       - REDIS_PASSWORD=my-password
       - REDIS_PORT=6379
-      - REDIS_DATABASES=16
-  
+    networks:
+      - backend
   # jaeger:
   #   image: jaegertracing/all-in-one
   #   container_name: jaeger
@@ -44,3 +48,6 @@ services:
   #     - 9411:9411
   #     - 14268:14268
   #     - 16686:16686  
+networks:
+  backend:
+    driver: bridge
