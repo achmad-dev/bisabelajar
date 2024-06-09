@@ -2,6 +2,7 @@ package route
 
 import (
 	"bisabelajar/api/v1/handler"
+	middlewarev1 "bisabelajar/api/v1/middleware"
 	"log"
 	"net/http"
 	"time"
@@ -14,11 +15,12 @@ import (
 
 type Route struct {
 	seriesHandle handler.SeriesHandler
+	shortHandler handler.ShortHandler
 	port         string
 }
 
-func NewV1Route(seriesHandler handler.SeriesHandler, port string) Route {
-	return Route{seriesHandle: seriesHandler, port: port}
+func NewV1Route(seriesHandler handler.SeriesHandler, shortHandler handler.ShortHandler, port string) Route {
+	return Route{seriesHandle: seriesHandler, shortHandler: shortHandler, port: port}
 }
 
 func (b *Route) Intialize() {
@@ -29,6 +31,7 @@ func (b *Route) Intialize() {
 		middleware.RedirectSlashes,
 		middleware.Recoverer,
 		middleware.Logger, //middleware to recover from panics
+		middlewarev1.RequestIDAndTimestampMiddleware,
 		cors.Handler(cors.Options{
 			// AllowedOrigins:   []string{"https://foo.com"}, // Use this to allow specific origin hosts
 			AllowedOrigins: []string{"https://*", "http://*"},
@@ -45,6 +48,7 @@ func (b *Route) Intialize() {
 
 	router.Route("/v1", func(r chi.Router) {
 		r.Mount("/series", b.seriesHandle.Routes())
+		r.Mount("/shorts", b.shortHandler.Routes())
 	})
 	log.Printf("runnning on port %s", b.port)
 	log.Fatal(http.ListenAndServe(b.port, router))

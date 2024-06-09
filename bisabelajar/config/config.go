@@ -20,6 +20,13 @@ type Env struct {
 	RedisPort     string `env:"REDIS_PORT" json:"REDIS_PORT"`
 	RedisHost     string `env:"REDIS_HOST" json:"REDIS_HOST"`
 
+	//Jaeger
+	JAEGERTRACEURL string `env:"JAEGERTRACEURL" json:"JAEGERTRACEURL"`
+
+	//Firebase
+	BucketName string `env:"BUCKETNAME" json:"BUCKETNAME"`
+
 	// App
-	Port string `env:"PORT" json:"PORT"`
+	Port         string `env:"PORT" json:"PORT"`
+	Tempfilepath string `env:"TEMPFILEPATH" json:"TEMPFILEPATH"`
 }

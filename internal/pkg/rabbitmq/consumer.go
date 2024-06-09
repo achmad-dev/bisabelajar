@@ -79,25 +79,30 @@ func (c *Consumer) Consume(ctx context.Context, exchange_name, mqtype, routing_k
 		return err
 	}
 	go func() {
-		select {
-		case <-ctx.Done():
-			defer func(ch *amqp.Channel) {
-				err := ch.Close()
-				if err != nil {
-					c.log.Errorf("error close channel %s", err.Error())
-				}
-			}(c.channel)
-			c.log.Infof("channel closed for for queue: %s", q.Name)
-			return
-
-		case msgs, ok := <-msgs:
-			{
+		for {
+			select {
+			case <-ctx.Done():
+				defer func(ch *amqp.Channel) {
+					if err := ch.Close(); err != nil {
+						c.log.Errorf("error closing channel: %s", err.Error())
+					}
+				}(c.channel)
+				c.log.Infof("channel closed for queue: %s", q.Name)
+				return
+			case msg, ok := <-msgs:
 				if !ok {
-					c.log.Error()
+					c.log.Error("message channel closed")
+					return
 				}
-				err := msgs.Ack(false)
-				if err != nil {
-					c.log.Errorf("can't ack for delivery %s", string(msgs.Body))
+				if err := onMsg(msg); err != nil {
+					c.log.Errorf("error processing message: %s", err.Error())
+					if err := msg.Nack(false, true); err != nil {
+						c.log.Errorf("failed to nack message: %s", err.Error())
+					}
+				} else {
+					if err := msg.Ack(false); err != nil {
+						c.log.Errorf("failed to ack message: %s", err.Error())
+					}
 				}
 			}
 		}
